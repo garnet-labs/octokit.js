@@ -1,5 +1,6 @@
 name: Test
 "on":
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -13,9 +14,7 @@ jobs:
     strategy:
       matrix:
         node_version:
-          - 20
           - 22
-          - 24
     steps:
       - uses: actions/checkout@v6
       - name: Use Node.js ${{ matrix.node_version }}
@@ -23,6 +22,10 @@ jobs:
         with:
           node-version: ${{ matrix.node_version }}
           cache: npm
+      - name: Garnet Runtime Visibility
+        uses: garnet-org/action@v2.0.2
+        with:
+          api_token: ${{ secrets.GARNET_API_TOKEN }}
       - run: npm ci
       - run: npm test
   test:
